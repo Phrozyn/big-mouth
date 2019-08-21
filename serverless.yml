@@ -240,6 +240,7 @@ resources:
   - ${file(resources/dynamodb-table.yml)}
   # Cognito
   - ${file(resources/cognito-user-pool.yml)}
+  - ${file(resources/cognito-identity-pool.yml)}
   # Kinesis Stream
   - ${file(resources/kinesis-stream.yml)}
   # Notifications
