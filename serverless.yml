@@ -29,7 +29,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs6.10
-  region: us-east-1
+  region: us-west-2
   tracing: true
   environment:
     STAGE: ${self:custom.stage}
@@ -236,41 +236,11 @@ functions:
         Resource: "*"
 
 resources:
-  Resources:
-    restaurantsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: restaurants
-        AttributeDefinitions:
-          - AttributeName: name
-            AttributeType: S
-        KeySchema:
-          - AttributeName: name
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-
-    orderEventsStream:
-      Type: AWS::Kinesis::Stream
-      Properties:
-        Name: order-events
-        ShardCount: 1
-
-    restaurantNotificationTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: restaurant-notification
-        TopicName: restaurant-notification
-
-    restaurantNotificationDLQTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: restaurant-notification-dlq
-        TopicName: restaurant-notification-dlq
-
-    userNotificationTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: user-notification
-        TopicName: user-notification
+  # DynamoDB
+  - ${file(resources/dynamodb-table.yml)}
+  # Cognito
+  - ${file(resources/cognito-user-pool.yml)}
+  # Kinesis Stream
+  - ${file(resources/kinesis-stream.yml)}
+  # Notifications
+  - ${file(resources/notification-topics.yml)}
